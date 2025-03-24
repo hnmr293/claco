@@ -75,7 +75,7 @@ def main():
                     if message.strip() == "</>":
                         print(flush=True)
                         continue
-                    print(message, end="", flush=True)
+                    print(message, end=" ", flush=True)
                 print(flush=True)
             except KeyboardInterrupt:
                 print("Ctrl+C pressed. closing...")
