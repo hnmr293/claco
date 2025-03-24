@@ -41,22 +41,22 @@ class ClaudeSender(Sender):
         message = message.splitlines()
 
         for i, line in enumerate(message):
-            e = super().send(target, line.strip(), raw=False)
-            if not e:
-                print(f"[ERROR] Failed to send message: window '{target}' not found")
-                return False
+            h, e = super().send(target, line.strip(), raw=False)
+            if not h:
+                print(f"[ERROR] Failed to send message: {e}")
+                return False, e
             if i < len(message) - 1:
-                e = super().send(target, "+{ENTER}", raw=True)
-                if not e:
-                    print(f"[ERROR] Failed to send message: window '{target}' not found")
-                    return False
+                h, e = super().send(target, "+{ENTER}", raw=True)
+                if not h:
+                    print(f"[ERROR] Failed to send message: {e}")
+                    return False, e
 
-        e = super().send(target, "+{ENTER}+{ENTER}" + self.sink_prompt + "{ENTER}", raw=True)
-        if not e:
-            print(f"[ERROR] Failed to send message: window '{target}' not found")
-            return False
+        h, e = super().send(target, "+{ENTER}+{ENTER}" + self.sink_prompt + "{ENTER}", raw=True)
+        if not h:
+            print(f"[ERROR] Failed to send message: {e}")
+            return False, e
 
-        return True
+        return True, None
 
 
 def main():
@@ -77,8 +77,8 @@ def main():
                 message = input()
 
                 # post
-                e = sender.send(target, message)
-                if not e:
+                h, e = sender.send(target, message)
+                if not h:
                     continue
 
                 # receive
