@@ -5,7 +5,7 @@ import datetime
 import os
 import traceback
 from mcp.server.fastmcp import FastMCP
-from claco.config import IP_ADDR, PORT
+from claco.config import CLACO_IP_ADDR, CLACO_PORT
 
 
 # Create an MCP server
@@ -23,7 +23,7 @@ def sink(message: str) -> None:
 
     # メッセージをエンコードして送信
     try:
-        sock.sendto(message.encode("utf-8"), (IP_ADDR, PORT))
+        sock.sendto(message.encode("utf-8"), (CLACO_IP_ADDR, CLACO_PORT))
     except Exception as e:
         error_message = f"Failed to send message: {e}"
         # print(error_message)
