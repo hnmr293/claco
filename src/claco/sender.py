@@ -23,13 +23,15 @@ class Sender:
                 err = x.stderr.decode()
             except UnicodeDecodeError:
                 err = str(x.stderr)
-            if f"Process '{target}' was not found." in err:
-                return False
-
+            
             try:
                 out = x.stdout.decode()
             except UnicodeDecodeError:
                 out = str(x.stdout)
+
+            
+            if f"Process '{target}' was not found." in out:
+                return False
 
             print(f"Error: {e}")
             print(f"stdout: {out}")

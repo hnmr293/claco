@@ -1,9 +1,9 @@
 from queue import Queue, Empty as QueueEmpty
 import time
 
-from sender import Sender
-from receiver import UDPReceiver
-from clako.config import IP_ADDR, PORT, SENDER_PATH
+from claco.sender import Sender
+from claco.receiver import UDPReceiver
+from claco.config import IP_ADDR, PORT, SENDER_PATH
 
 
 class MessageQueue:
@@ -79,7 +79,7 @@ def main():
                 # post
                 e = sender.send(target, message)
                 if not e:
-                    print("Failed to send message")
+                    # print("Failed to send message")
                     continue
 
                 # receive
