@@ -1,8 +1,18 @@
 from claco.comm import create_communicator
-from claco.config import CLACO_UDP_ADDR, CLACO_UDP_PORT, CLACO_SENDER_PATH
 
 
 def main():
+    from claco.config import CLACO_UDP_ADDR, CLACO_UDP_PORT, CLACO_SENDER_PATH
+
+    if CLACO_SENDER_PATH is None:
+        raise ValueError("CLACO_SENDER_PATH is not set")
+
+    if CLACO_UDP_ADDR is None:
+        raise ValueError("CLACO_UDP_ADDR is not set")
+
+    if CLACO_UDP_PORT is None:
+        raise ValueError("CLACO_UDP_PORT is not set")
+
     TARGET = "Claude"
 
     with create_communicator(
