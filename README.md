@@ -11,8 +11,8 @@ $ curl -L -O https://github.com/hnmr293/ClaudeTools/releases/download/v0.1.0/Cla
 
 # configuration
 $ echo CLACO_SENDER_PATH="D:/dev/claude-chat-cli/ClaudeTools.Cui.exe" >.env
-$ echo CLACO_IP_ADDR="127.0.0.1" >>.env
-$ echo CLACO_PORT=9999 >>.env
+$ echo CLACO_UDP_ADDR="127.0.0.1" >>.env
+$ echo CLACO_UDP_PORT=9999 >>.env
 
 # start chat
 $ uv run chat

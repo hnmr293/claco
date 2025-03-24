@@ -1,6 +1,6 @@
 from claco.sender import Sender
 from claco.receiver import UDPReceiver
-from claco.config import CLACO_IP_ADDR, CLACO_PORT, CLACO_SENDER_PATH
+from claco.config import CLACO_UDP_ADDR, CLACO_UDP_PORT, CLACO_SENDER_PATH
 from claco.msg import MessageQueue
 
 
@@ -53,7 +53,7 @@ def main():
     messages = ClaudeMessageQueue(maxsize=8)
     sender = ClaudeSender(CLACO_SENDER_PATH)
 
-    with UDPReceiver(CLACO_IP_ADDR, CLACO_PORT) as receiver:
+    with UDPReceiver(CLACO_UDP_ADDR, CLACO_UDP_PORT) as receiver:
 
         def post(message, address, timestamp):
             messages.post(message)
