@@ -47,6 +47,27 @@ class ClaudeSender(Sender):
 
         return True, None
 
+    async def asend(self, target, message, raw=False):
+        message = message.splitlines()
+
+        for i, line in enumerate(message):
+            h, e = await super().asend(target, line.strip(), raw=False)
+            if not h:
+                print(f"[ERROR] Failed to send message: {e}")
+                return False, e
+            if i < len(message) - 1:
+                h, e = await super().asend(target, "+{ENTER}", raw=True)
+                if not h:
+                    print(f"[ERROR] Failed to send message: {e}")
+                    return False, e
+
+        h, e = await super().asend(target, "+{ENTER}+{ENTER}" + self.sink_prompt + "{ENTER}", raw=True)
+        if not h:
+            print(f"[ERROR] Failed to send message: {e}")
+            return False, e
+
+        return True, None
+
 
 def main():
     target = "Claude"
