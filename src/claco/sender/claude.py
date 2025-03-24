@@ -1,6 +1,6 @@
 from typing import override
 
-from claco.sender.base import Sender
+from .base import Sender
 
 
 _IGNORE = object()

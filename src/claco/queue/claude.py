@@ -1,6 +1,6 @@
 from typing import override
 
-from claco.queue.base import MessageQueue, AsyncMessageQueue
+from .base import MessageQueue, AsyncMessageQueue
 
 
 class ClaudeMessageQueue(MessageQueue):

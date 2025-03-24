@@ -1,7 +1,7 @@
 from typing import Iterator, AsyncIterator
 
-from claco.queue.base import MessageQueue, AsyncMessageQueue
-from claco.sender.base import Sender
+from claco.queue import MessageQueue, AsyncMessageQueue
+from claco.sender import Sender
 from claco.receiver import UDPReceiver
 
 
@@ -157,8 +157,8 @@ def create_communicator(
     udp_bufsize: int = 4096,
     queue_max_size: int = 8,
 ) -> Communicator:
-    from claco.sender.claude import ClaudeSender
-    from claco.queue.claude import ClaudeMessageQueue
+    from claco.sender import ClaudeSender
+    from claco.queue import ClaudeMessageQueue
 
     sender = ClaudeSender(exe_path)
     queue = ClaudeMessageQueue(maxsize=queue_max_size)
@@ -174,8 +174,8 @@ def create_async_communicator(
     udp_bufsize: int = 4096,
     queue_max_size: int = 8,
 ) -> AsyncCommunicator:
-    from claco.sender.claude import ClaudeSender
-    from claco.queue.claude import AsyncClaudeMessageQueue
+    from claco.sender import ClaudeSender
+    from claco.queue import AsyncClaudeMessageQueue
 
     sender = ClaudeSender(exe_path)
     queue = AsyncClaudeMessageQueue(maxsize=queue_max_size)
