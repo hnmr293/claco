@@ -5,7 +5,7 @@ import datetime
 import os
 import traceback
 from mcp.server.fastmcp import FastMCP
-from config import IP_ADDR, PORT
+from clako.config import IP_ADDR, PORT
 
 
 # Create an MCP server

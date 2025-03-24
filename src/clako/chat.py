@@ -3,7 +3,7 @@ import time
 
 from sender import Sender
 from receiver import UDPReceiver
-from config import IP_ADDR, PORT, SENDER_PATH
+from clako.config import IP_ADDR, PORT, SENDER_PATH
 
 
 class MessageQueue:
