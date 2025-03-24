@@ -1,4 +1,9 @@
+from typing import override
+
 from claco.sender.base import Sender
+
+
+_IGNORE = object()
 
 
 class ClaudeSender(Sender):
@@ -10,7 +15,8 @@ class ClaudeSender(Sender):
         super().__init__(exe_path)
         self.sink_prompt = sink_prompt
 
-    def send(self, target, message, raw=False):
+    @override
+    def send(self, target, message, raw=_IGNORE):
         message = message.splitlines()
 
         for i, line in enumerate(message):
@@ -31,7 +37,8 @@ class ClaudeSender(Sender):
 
         return True, None
 
-    async def asend(self, target, message, raw=False):
+    @override
+    async def asend(self, target, message, raw=_IGNORE):
         message = message.splitlines()
 
         for i, line in enumerate(message):

@@ -1,33 +1,26 @@
-from claco.receiver import UDPReceiver
+from claco.comm import create_communicator
 from claco.config import CLACO_UDP_ADDR, CLACO_UDP_PORT, CLACO_SENDER_PATH
-from claco.queue.claude import ClaudeMessageQueue
-from claco.sender.claude import ClaudeSender
 
 
 def main():
-    target = "Claude"
-    messages = ClaudeMessageQueue(maxsize=8)
-    sender = ClaudeSender(CLACO_SENDER_PATH)
+    TARGET = "Claude"
 
-    with UDPReceiver(CLACO_UDP_ADDR, CLACO_UDP_PORT) as receiver:
-
-        def post(message, address, timestamp):
-            messages.post(message)
-
-        receiver.register_callback(post)
-
+    with create_communicator(
+        TARGET,
+        CLACO_SENDER_PATH,
+        CLACO_UDP_ADDR,
+        CLACO_UDP_PORT,
+    ) as comm:
         while True:
             try:
                 print(">", end=" ", flush=True)
                 message = input()
 
-                # post
-                h, e = sender.send(target, message)
-                if not h:
-                    continue
+                # comm.communicate(message):
+                #   1. comm.send(message)
+                #   2. comm.receive()
 
-                # receive
-                for message in messages.receive_all():
+                for message in comm.communicate(message):
                     if message.strip() == "</>":
                         print(flush=True)
                         continue

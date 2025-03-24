@@ -1,3 +1,5 @@
+from typing import override
+
 from claco.queue.base import MessageQueue, AsyncMessageQueue
 
 
@@ -6,6 +8,7 @@ class ClaudeMessageQueue(MessageQueue):
         super().__init__(maxsize)
         self.exit_tag = exit_tag
 
+    @override
     def receive_all(self):
         while True:
             msg = self.receive()
@@ -19,6 +22,7 @@ class AsyncClaudeMessageQueue(AsyncMessageQueue):
         super().__init__(maxsize)
         self.exit_tag = exit_tag
 
+    @override
     async def receive_all(self):
         while True:
             msg = await self.receive()

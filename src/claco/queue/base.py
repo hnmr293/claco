@@ -1,6 +1,7 @@
 import queue
 from asyncio import queues as aqueue, sleep as asleep
 import time
+from typing import Iterator, AsyncIterator
 
 
 class MessageQueue:
@@ -24,6 +25,11 @@ class MessageQueue:
         except queue.Empty:
             return None
 
+    def receive_all(self) -> Iterator[str]:
+        while True:
+            msg = self.receive()
+            yield msg
+
 
 class AsyncMessageQueue:
     def __init__(self, maxsize=1):
@@ -45,3 +51,8 @@ class AsyncMessageQueue:
             return await self._q.get_nowait()
         except aqueue.QueueEmpty:
             return None
+
+    async def receive_all(self) -> AsyncIterator[str]:
+        while True:
+            msg = await self.receive()
+            yield msg
