@@ -38,6 +38,14 @@ class _Sender:
         if not h:
             raise PostError(e)
 
+    def clear(self):
+        if hasattr(self.sender, "send_clear"):
+            self.sender.send_clear(self.target)
+
+    async def aclear(self):
+        if hasattr(self.sender, "asend_clear"):
+            await self.sender.asend_clear(self.target)
+
 
 class _Receiver:
     # ターゲットから返事をもらう側の処理を担当する
@@ -119,6 +127,9 @@ class Communicator:
         logger.debug(f"[{self.__class__.__name__}] start receiving")
         return self.receiver.receive()
 
+    def clear(self):
+        self.sender.clear()
+
     def communicate(self, message: str) -> Iterator[str]:
         logger.debug(f"[{self.__class__.__name__}] communicate: {message}")
         self.send(message)
@@ -152,6 +163,9 @@ class AsyncCommunicator:
     def receive(self):
         logger.debug(f"[{self.__class__.__name__}] start receiving")
         return self.receiver.receive()
+
+    async def clear(self):
+        self.sender.aclear()
 
     def communicate(self, message: str) -> AsyncIterator[str]:
         logger.debug(f"[{self.__class__.__name__}] communicate: {message}")

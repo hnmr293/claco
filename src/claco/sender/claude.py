@@ -21,7 +21,7 @@ class ClaudeSender(Sender):
         self.sink_prompt = sink_prompt
 
     @override
-    def send(self, target, message, raw=_IGNORE):
+    def send(self, target: str, message: str, raw=_IGNORE):
         logger.debug(f"[{self.__class__.__name__}] send: {target=} {message=} {raw=}")
 
         message = message.splitlines()
@@ -55,7 +55,7 @@ class ClaudeSender(Sender):
         return True, None
 
     @override
-    async def asend(self, target, message, raw=_IGNORE):
+    async def asend(self, target: str, message: str, raw=_IGNORE):
         logger.debug(f"[{self.__class__.__name__}] asend: {target=} {message=} {raw=}")
 
         message = message.splitlines()
@@ -82,6 +82,28 @@ class ClaudeSender(Sender):
             return False, e
 
         h, e = await super().asend(target, "{ENTER}", raw=True)
+        if not h:
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
+            return False, e
+
+        return True, None
+
+    def send_clear(self, target: str):
+        logger.debug(f"[{self.__class__.__name__}] send_clear {target=}")
+
+        # ^A does not work
+        h, e = super().send(target, "_^{END}+^{HOME}{DEL}", raw=True)
+        if not h:
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
+            return False, e
+
+        return True, None
+
+    async def asend_clear(self, target: str):
+        logger.debug(f"[{self.__class__.__name__}] asend_clear {target=}")
+
+        # ^A does not work
+        h, e = await super().asend(target, "_^{END}+^{HOME}{DEL}", raw=True)
         if not h:
             logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
