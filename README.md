@@ -7,7 +7,7 @@ $ cd /d D:\dev
 $ uv init claude-chat-cli
 $ cd claude-chat-cli
 $ uv add git+https://github.com/hnmr293/claco
-$ curl -L -O https://github.com/hnmr293/ClaudeTools/releases/download/v0.1.0/ClaudeTools.Cui.exe
+$ curl -L -O https://github.com/hnmr293/ClaudeTools/releases/download/v0.2.0/ClaudeTools.Cui.exe
 
 # configuration
 $ echo CLACO_SENDER_PATH="D:/dev/claude-chat-cli/ClaudeTools.Cui.exe" >.env
