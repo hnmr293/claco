@@ -2,7 +2,14 @@ from claco.comm import create_communicator
 
 
 def main():
-    from claco.config import CLACO_UDP_ADDR, CLACO_UDP_PORT, CLACO_SENDER_PATH
+    import os
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
+    CLACO_UDP_ADDR = os.getenv("CLACO_UDP_ADDR")
+    CLACO_UDP_PORT = os.getenv("CLACO_UDP_PORT")
+    CLACO_SENDER_PATH = os.getenv("CLACO_SENDER_PATH")
 
     if CLACO_SENDER_PATH is None:
         raise ValueError("CLACO_SENDER_PATH is not set")

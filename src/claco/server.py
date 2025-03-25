@@ -3,10 +3,21 @@ import os
 import sys
 import socket
 import datetime
-import os
 import traceback
+
 from mcp.server.fastmcp import FastMCP
-from claco.config import CLACO_UDP_ADDR, CLACO_UDP_PORT
+from dotenv import load_dotenv
+
+
+load_dotenv()
+CLACO_UDP_ADDR = os.getenv("CLACO_UDP_ADDR")
+CLACO_UDP_PORT = os.getenv("CLACO_UDP_PORT")
+
+if CLACO_UDP_ADDR is None:
+    raise ValueError("CLACO_UDP_ADDR is not set")
+
+if CLACO_UDP_PORT is None:
+    raise ValueError("CLACO_UDP_PORT is not set")
 
 
 # Create an MCP server
