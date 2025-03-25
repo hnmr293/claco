@@ -1,3 +1,4 @@
+import os
 import subprocess
 import asyncio
 from locale import getdefaultlocale
@@ -34,6 +35,8 @@ class Sender:
     def __init__(self, exe_path: str):
         self.exe_path = exe_path
         logger.debug(f"[{self.__class__.__name__}] {exe_path=}")
+        if not os.path.exists(exe_path):
+            logger.warning(f"[{self.__class__.__name__}] {exe_path!r} does not exist; may not work properly")
 
     def send(
         self,
