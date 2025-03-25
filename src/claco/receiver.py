@@ -70,6 +70,8 @@ class UDPReceiver:
                         logger.exception(f"[{self.__class__.__name__}] failed to decode message: {data}")
                         message = str(data)[2:-1]  # デコード失敗時はバイト列をそのまま文字列として扱う
 
+                    logger.debug(f"[{self.__class__.__name__}] {message=} {address=} {timestamp=}")
+
                     # 登録されたすべてのコールバック関数を呼び出す
                     for callback in self.callbacks:
                         try:
@@ -98,6 +100,8 @@ class UDPReceiver:
         Args:
             threaded: 別スレッドで受信ループを実行するかどうか
         """
+        logger.debug(f"[{self.__class__.__name__}] Starting UDP receiver... ({threaded=})")
+
         # 既に実行中の場合は何もしない
         if self.running:
             logger.warning(f"[{self.__class__.__name__}] `start` called, but already running. ignoring...")
@@ -121,6 +125,7 @@ class UDPReceiver:
         if threaded:
             # 別スレッドで受信ループを開始
             self.receiver_thread = threading.Thread(target=self._receive_loop, daemon=True)
+            logger.debug(f"[{self.__class__.__name__}] start thread {self.receiver_thread.native_id}")
             self.receiver_thread.start()
         else:
             # 同じスレッドで受信ループを実行（以前の動作）
@@ -131,7 +136,10 @@ class UDPReceiver:
         """
         レシーバーを停止する
         """
+        logger.debug(f"[{self.__class__.__name__}] Stopping UDP receiver...")
+
         if not self.running:
+            logger.warning(f"[{self.__class__.__name__}] `stop` called, but not running. ignoring...")
             return
 
         self.running = False
@@ -142,6 +150,7 @@ class UDPReceiver:
             and self.receiver_thread.is_alive()
             and threading.current_thread() != self.receiver_thread
         ):
+            logging.info(f"[{self.__class__.__name__}] Waiting for receiver thread to join...")
             self.receiver_thread.join(timeout=2.0)  # 最大2秒待機
 
         self.cleanup()
@@ -155,7 +164,7 @@ class UDPReceiver:
             self.sock = None
 
         self.receiver_thread = None
-        logging.info(f"[{self.__class__.__name__}] Server closed.")
+        logger.info(f"[{self.__class__.__name__}] Server closed.")
 
     def __enter__(self):
         """

@@ -1,8 +1,12 @@
+import logging
 from typing import Iterator, AsyncIterator
 
 from claco.queue import MessageQueue, AsyncMessageQueue
 from claco.sender import Sender
 from claco.receiver import UDPReceiver
+
+
+logger = logging.getLogger(__name__)
 
 
 class CommError(Exception):
@@ -108,12 +112,15 @@ class Communicator:
         self.receiver.__exit__(exc_type, exc_value, traceback)
 
     def send(self, message):
+        logger.debug(f"[{self.__class__.__name__}] send: {message}")
         self.sender.send(message)
 
     def receive(self):
+        logger.debug(f"[{self.__class__.__name__}] start receiving")
         return self.receiver.receive()
 
     def communicate(self, message: str) -> Iterator[str]:
+        logger.debug(f"[{self.__class__.__name__}] communicate: {message}")
         self.send(message)
         return self.receive()
 
@@ -139,12 +146,15 @@ class AsyncCommunicator:
     def send(self, message):
         # 今のところ UDPReceiver のコールバックが同期呼び出しを前提としているので
         # ここも同期呼び出しにする
+        logger.debug(f"[{self.__class__.__name__}] send: {message}")
         self.sender.send(message)
 
     def receive(self):
+        logger.debug(f"[{self.__class__.__name__}] start receiving")
         return self.receiver.receive()
 
     def communicate(self, message: str) -> AsyncIterator[str]:
+        logger.debug(f"[{self.__class__.__name__}] communicate: {message}")
         self.send(message)
         return self.receive()
 

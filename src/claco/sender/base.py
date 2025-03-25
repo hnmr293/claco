@@ -2,7 +2,11 @@ import subprocess
 import asyncio
 from locale import getdefaultlocale
 import re
+import logging
 from typing import Literal
+
+
+logger = logging.getLogger(__name__)
 
 
 def _decode(x: bytes) -> str:
@@ -29,6 +33,7 @@ def _get_error_message(out: str, target: str) -> str:
 class Sender:
     def __init__(self, exe_path: str):
         self.exe_path = exe_path
+        logger.debug(f"[{self.__class__.__name__}] {exe_path=}")
 
     def send(
         self,
@@ -37,6 +42,8 @@ class Sender:
         raw: bool = False,
     ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
         # execute command `{exe_path} {message}`
+        logger.debug(f"[{self.__class__.__name__}] send: {target=} {message=} {raw=}")
+
         args = [self.exe_path, target, message]
         if raw:
             args.insert(1, "--raw")
@@ -54,6 +61,9 @@ class Sender:
 
         out, err = _decode(x.stdout), _decode(x.stderr)
 
+        logger.debug(f"[{self.__class__.__name__}] stdout: {out}")
+        logger.debug(f"[{self.__class__.__name__}] stderr: {out}")
+
         err_msg = _get_error_message(out, target)
 
         return False, err_msg
@@ -65,6 +75,8 @@ class Sender:
         raw: bool = False,
     ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
         # execute command `{exe_path} {message}`
+        logger.debug(f"[{self.__class__.__name__}] asend: {target=} {message=} {raw=}")
+
         args = [self.exe_path, target, message]
         if raw:
             args.insert(1, "--raw")
@@ -83,6 +95,9 @@ class Sender:
             return True, None
 
         out, err = _decode(x.stdout), _decode(x.stderr)
+
+        logger.debug(f"[{self.__class__.__name__}] stdout: {out}")
+        logger.debug(f"[{self.__class__.__name__}] stderr: {out}")
 
         err_msg = _get_error_message(out, target)
 

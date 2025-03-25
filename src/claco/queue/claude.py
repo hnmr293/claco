@@ -1,6 +1,10 @@
+import logging
 from typing import override
 
 from .base import MessageQueue, AsyncMessageQueue
+
+
+logger = logging.getLogger(__name__)
 
 
 class ClaudeMessageQueue(MessageQueue):
@@ -10,6 +14,8 @@ class ClaudeMessageQueue(MessageQueue):
 
     @override
     def receive_all(self):
+        logger.debug(f"[{self.__class__.__name__}] start receive_all")
+
         while True:
             msg = self.receive()
             if msg.strip() == self.exit_tag:
@@ -24,6 +30,8 @@ class AsyncClaudeMessageQueue(AsyncMessageQueue):
 
     @override
     async def receive_all(self):
+        logger.debug(f"[{self.__class__.__name__}] start receive_all")
+
         while True:
             msg = await self.receive()
             if msg.strip() == self.exit_tag:
