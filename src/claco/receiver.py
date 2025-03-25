@@ -125,8 +125,8 @@ class UDPReceiver:
         if threaded:
             # 別スレッドで受信ループを開始
             self.receiver_thread = threading.Thread(target=self._receive_loop, daemon=True)
-            logger.debug(f"[{self.__class__.__name__}] start thread {self.receiver_thread.native_id}")
             self.receiver_thread.start()
+            logger.debug(f"[{self.__class__.__name__}] start thread {self.receiver_thread.native_id}")
         else:
             # 同じスレッドで受信ループを実行（以前の動作）
             self._receive_loop()
