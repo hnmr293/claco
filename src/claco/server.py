@@ -1,5 +1,6 @@
 # server.py
 import os
+import sys
 import socket
 import datetime
 import os
@@ -12,21 +13,22 @@ from claco.config import CLACO_UDP_ADDR, CLACO_UDP_PORT
 mcp = FastMCP("Sink")
 
 
-# ローカルホスト（マシン内）のアドレスとポートを指定
-
-
-# Add an addition tool
 @mcp.tool()
 def sink(message: str) -> None:
+    print(f"[Sink] serving: {CLACO_UDP_ADDR}:{CLACO_UDP_PORT}", file=sys.stderr)
+
     # UDP ソケット作成
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     # メッセージをエンコードして送信
     try:
-        sock.sendto(message.encode("utf-8"), (CLACO_UDP_ADDR, CLACO_UDP_PORT))
+        msg = message.encode("utf-8")
+        print(f"[Sink] sending: {message}", file=sys.stderr)
+        sock.sendto(msg, (CLACO_UDP_ADDR, CLACO_UDP_PORT))
+        print(f"[Sink] completed", file=sys.stderr)
     except Exception as e:
-        error_message = f"Failed to send message: {e}"
-        # print(error_message)
+        error_message = f"failed to send message: {e}"
+        print(f"[Sink] {error_message}", file=sys.stderr)
 
         # 例外をログファイルに記録
         log_directory = "logs"
