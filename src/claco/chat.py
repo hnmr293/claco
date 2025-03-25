@@ -26,7 +26,7 @@ def main():
         TARGET,
         CLACO_SENDER_PATH,
         CLACO_UDP_ADDR,
-        CLACO_UDP_PORT,
+        int(CLACO_UDP_PORT),
     ) as comm:
         while True:
             try:
