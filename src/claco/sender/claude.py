@@ -30,7 +30,17 @@ class ClaudeSender(Sender):
                     print(f"[ERROR] Failed to send message: {e}")
                     return False, e
 
-        h, e = super().send(target, "+{ENTER}+{ENTER}" + self.sink_prompt + "{ENTER}", raw=True)
+        h, e = super().send(target, "+{ENTER}+{ENTER}", raw=True)
+        if not h:
+            print(f"[ERROR] Failed to send message: {e}")
+            return False, e
+
+        h, e = super().send(target, self.sink_prompt, raw=False)
+        if not h:
+            print(f"[ERROR] Failed to send message: {e}")
+            return False, e
+
+        h, e = super().send(target, "{ENTER}", raw=True)
         if not h:
             print(f"[ERROR] Failed to send message: {e}")
             return False, e
@@ -52,7 +62,17 @@ class ClaudeSender(Sender):
                     print(f"[ERROR] Failed to send message: {e}")
                     return False, e
 
-        h, e = await super().asend(target, "+{ENTER}+{ENTER}" + self.sink_prompt + "{ENTER}", raw=True)
+        h, e = await super().asend(target, "+{ENTER}+{ENTER}", raw=True)
+        if not h:
+            print(f"[ERROR] Failed to send message: {e}")
+            return False, e
+
+        h, e = await super().asend(target, self.sink_prompt, raw=False)
+        if not h:
+            print(f"[ERROR] Failed to send message: {e}")
+            return False, e
+
+        h, e = await super().asend(target, "{ENTER}", raw=True)
         if not h:
             print(f"[ERROR] Failed to send message: {e}")
             return False, e
