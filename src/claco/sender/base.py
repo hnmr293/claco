@@ -3,6 +3,7 @@ import subprocess
 import asyncio
 from locale import getdefaultlocale
 import re
+import importlib.resources
 import logging
 from typing import Literal
 
@@ -34,7 +35,9 @@ def _get_error_message(out: str, target: str) -> str:
 
 
 class Sender:
-    def __init__(self, exe_path: str):
+    def __init__(self, exe_path: str | None = None):
+        if exe_path is None:
+            exe_path = str(importlib.resources.files("claco.bin").joinpath("ClaudeTools.Cui.exe"))
         self.exe_path = exe_path
         logger.debug(f"[{self.__class__.__name__}] {exe_path=}")
         if not os.path.exists(exe_path):

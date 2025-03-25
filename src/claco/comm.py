@@ -161,16 +161,23 @@ class AsyncCommunicator:
 
 def create_communicator(
     target: str,
-    exe_path: str,
     udp_addr: str,
     udp_port: int,
     udp_bufsize: int = 4096,
     queue_max_size: int = 8,
+    exe_path: str | None = None,
+    sink_prompt: str | None = None,
 ) -> Communicator:
     from claco.sender import ClaudeSender
     from claco.queue import ClaudeMessageQueue
 
-    sender = ClaudeSender(exe_path)
+    sender_args = {}
+    if exe_path is not None:
+        sender_args["exe_path"] = exe_path
+    if sink_prompt is not None:
+        sender_args["sink_prompt"] = sink_prompt
+    sender = ClaudeSender(**sender_args)
+
     queue = ClaudeMessageQueue(maxsize=queue_max_size)
     receiver = UDPReceiver(udp_addr, udp_port, buffer_size=udp_bufsize)
     return Communicator(target, sender, receiver, queue)
@@ -178,16 +185,23 @@ def create_communicator(
 
 def create_async_communicator(
     target: str,
-    exe_path: str,
     udp_addr: str,
     udp_port: int,
     udp_bufsize: int = 4096,
     queue_max_size: int = 8,
+    exe_path: str | None = None,
+    sink_prompt: str | None = None,
 ) -> AsyncCommunicator:
     from claco.sender import ClaudeSender
     from claco.queue import AsyncClaudeMessageQueue
 
-    sender = ClaudeSender(exe_path)
+    sender_args = {}
+    if exe_path is not None:
+        sender_args["exe_path"] = exe_path
+    if sink_prompt is not None:
+        sender_args["sink_prompt"] = sink_prompt
+    sender = ClaudeSender(**sender_args)
+
     queue = AsyncClaudeMessageQueue(maxsize=queue_max_size)
     receiver = UDPReceiver(udp_addr, udp_port, buffer_size=udp_bufsize)
     return AsyncCommunicator(target, sender, receiver, queue)

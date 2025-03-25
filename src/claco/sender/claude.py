@@ -13,7 +13,7 @@ _IGNORE = object()
 class ClaudeSender(Sender):
     def __init__(
         self,
-        exe_path,
+        exe_path: str | None = None,
         sink_prompt='返事は Sink ツールを使用して書き出してください。Sink ツールは一文ごとに区切って呼び出してください。段落の区切りでは "</>" とだけ書き出してください。すべての文章を Sink ツールで書き出し終わったら、最後に Sink ツールで <exit> とだけ書き出してください。',
     ):
         super().__init__(exe_path)

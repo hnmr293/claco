@@ -9,10 +9,6 @@ def main():
 
     CLACO_UDP_ADDR = os.getenv("CLACO_UDP_ADDR")
     CLACO_UDP_PORT = os.getenv("CLACO_UDP_PORT")
-    CLACO_SENDER_PATH = os.getenv("CLACO_SENDER_PATH")
-
-    if CLACO_SENDER_PATH is None:
-        raise ValueError("CLACO_SENDER_PATH is not set")
 
     if CLACO_UDP_ADDR is None:
         raise ValueError("CLACO_UDP_ADDR is not set")
@@ -24,7 +20,6 @@ def main():
 
     with create_communicator(
         TARGET,
-        CLACO_SENDER_PATH,
         CLACO_UDP_ADDR,
         int(CLACO_UDP_PORT),
     ) as comm:
