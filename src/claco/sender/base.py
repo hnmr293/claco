@@ -23,7 +23,7 @@ def _get_error_message(out: str, target: str) -> str:
         err_msg = f"Process '{target}' was not found."
     elif f"Window handle is invalid." in out:
         err_msg = f"Target window is minimized."
-        r = re.compile("handle\s*=\s*([0-9A-Fa-f]+)")
+        r = re.compile(r"handle\s*=\s*([0-9A-Fa-f]+)")
         if handles := r.findall(out):
             err_msg += "\nfound window handles:"
             for handle in handles:
