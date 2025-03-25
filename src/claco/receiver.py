@@ -60,7 +60,11 @@ class UDPReceiver:
                     timestamp = datetime.datetime.now()
 
                     # データをデコード
-                    message = data.decode("utf-8")
+                    try:
+                        message = data.decode("utf-8")
+                    except UnicodeDecodeError:
+                        logger.exception(f"Failed to decode message: {data}")
+                        message = str(data)[2:-1]  # デコード失敗時はバイト列をそのまま文字列として扱う
 
                     # 登録されたすべてのコールバック関数を呼び出す
                     for callback in self.callbacks:

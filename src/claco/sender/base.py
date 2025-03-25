@@ -9,7 +9,7 @@ def _decode(x: bytes) -> str:
     try:
         return x.decode(getdefaultlocale()[1])
     except UnicodeDecodeError:
-        return str(x)
+        return str(x)[2:-1]
 
 
 def _get_error_message(out: str, target: str) -> str:
