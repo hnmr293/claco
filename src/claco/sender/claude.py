@@ -1,6 +1,10 @@
+import logging
 from typing import override
 
 from .base import Sender
+
+
+logger = logging.getLogger(__name__)
 
 
 _IGNORE = object()
@@ -22,27 +26,27 @@ class ClaudeSender(Sender):
         for i, line in enumerate(message):
             h, e = super().send(target, line.strip(), raw=False)
             if not h:
-                print(f"[ERROR] Failed to send message: {e}")
+                logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
                 return False, e
             if i < len(message) - 1:
                 h, e = super().send(target, "+{ENTER}", raw=True)
                 if not h:
-                    print(f"[ERROR] Failed to send message: {e}")
+                    logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
                     return False, e
 
         h, e = super().send(target, "+{ENTER}+{ENTER}", raw=True)
         if not h:
-            print(f"[ERROR] Failed to send message: {e}")
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
 
         h, e = super().send(target, self.sink_prompt, raw=False)
         if not h:
-            print(f"[ERROR] Failed to send message: {e}")
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
 
         h, e = super().send(target, "{ENTER}", raw=True)
         if not h:
-            print(f"[ERROR] Failed to send message: {e}")
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
 
         return True, None
@@ -54,27 +58,27 @@ class ClaudeSender(Sender):
         for i, line in enumerate(message):
             h, e = await super().asend(target, line.strip(), raw=False)
             if not h:
-                print(f"[ERROR] Failed to send message: {e}")
+                logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
                 return False, e
             if i < len(message) - 1:
                 h, e = await super().asend(target, "+{ENTER}", raw=True)
                 if not h:
-                    print(f"[ERROR] Failed to send message: {e}")
+                    logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
                     return False, e
 
         h, e = await super().asend(target, "+{ENTER}+{ENTER}", raw=True)
         if not h:
-            print(f"[ERROR] Failed to send message: {e}")
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
 
         h, e = await super().asend(target, self.sink_prompt, raw=False)
         if not h:
-            print(f"[ERROR] Failed to send message: {e}")
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
 
         h, e = await super().asend(target, "{ENTER}", raw=True)
         if not h:
-            print(f"[ERROR] Failed to send message: {e}")
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
 
         return True, None

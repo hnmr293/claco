@@ -7,7 +7,11 @@ import socket
 import datetime
 import time
 import threading
+import logging
 from typing import Callable, List, Any, Optional, Tuple
+
+
+logger = logging.getLogger(__name__)
 
 
 class UDPReceiver:
@@ -63,7 +67,7 @@ class UDPReceiver:
                     try:
                         message = data.decode("utf-8")
                     except UnicodeDecodeError:
-                        logger.exception(f"Failed to decode message: {data}")
+                        logger.exception(f"[{self.__class__.__name__}] failed to decode message: {data}")
                         message = str(data)[2:-1]  # デコード失敗時はバイト列をそのまま文字列として扱う
 
                     # 登録されたすべてのコールバック関数を呼び出す
@@ -71,19 +75,21 @@ class UDPReceiver:
                         try:
                             callback(message, address, timestamp)
                         except Exception as e:
-                            print(f"コールバック実行エラー: {e}")
+                            logger.exception(
+                                f"[{self.__class__.__name__}] callback raised exception: message={message}"
+                            )
 
                 except socket.timeout:
                     # タイムアウトは正常、ループを継続
                     continue
                 except Exception as e:
                     if self.running:  # 停止処理中でなければエラーを表示
-                        print(f"受信エラー: {e}")
+                        logger.exception(f"[{self.__class__.__name__}] failed to call `recvfrom`")
                         time.sleep(0.1)  # 少し待機
 
         except Exception as e:
             if self.running:  # 停止処理中でなければエラーを表示
-                print(f"Error: {e}")
+                logger.exception(f"[{self.__class__.__name__}] failed to start receiver")
 
     def start(self, threaded: bool = True):
         """
@@ -94,7 +100,7 @@ class UDPReceiver:
         """
         # 既に実行中の場合は何もしない
         if self.running:
-            print("Receiver is already running.")
+            logger.warning(f"[{self.__class__.__name__}] `start` called, but already running. ignoring...")
             return
 
         # UDPソケットの作成
@@ -149,7 +155,7 @@ class UDPReceiver:
             self.sock = None
 
         self.receiver_thread = None
-        print("Server closed.")
+        logging.info(f"[{self.__class__.__name__}] Server closed.")
 
     def __enter__(self):
         """
