@@ -1,6 +1,6 @@
 [project]
 name = "claco"
-version = "0.4.1"
+version = "0.5.0"
 description = "cli tools for \"Claude for Desktop\""
 readme = "README.md"
 requires-python = ">=3.11"
