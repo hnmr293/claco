@@ -20,34 +20,26 @@ class ClaudeSender(Sender):
         logger.debug(f"[{self.__class__.__name__}] {exe_path=} {sink_prompt=}")
         self.sink_prompt = sink_prompt
 
+    def __create_send_argss(self, message: str):
+        message = message.splitlines()
+
+        args = []
+        for i, line in enumerate(message):
+            args.append((line.strip(), False))
+            if i < len(message) - 1:
+                args.append(("+{ENTER}", True))
+
+        args.append(("+{ENTER}+{ENTER}", True))
+        args.append((self.sink_prompt, False))
+        args.append(("{ENTER}", True))
+        return args
+
     @override
     def send(self, target: str, message: str, raw=_IGNORE):
         logger.debug(f"[{self.__class__.__name__}] send: {target=} {message=} {raw=}")
 
-        message = message.splitlines()
-
-        for i, line in enumerate(message):
-            h, e = super().send(target, line.strip(), raw=False)
-            if not h:
-                logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-                return False, e
-            if i < len(message) - 1:
-                h, e = super().send(target, "+{ENTER}", raw=True)
-                if not h:
-                    logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-                    return False, e
-
-        h, e = super().send(target, "+{ENTER}+{ENTER}", raw=True)
-        if not h:
-            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-            return False, e
-
-        h, e = super().send(target, self.sink_prompt, raw=False)
-        if not h:
-            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-            return False, e
-
-        h, e = super().send(target, "{ENTER}", raw=True)
+        args = self.__create_send_argss(message)
+        h, e = super().sends(target, args)
         if not h:
             logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e
@@ -58,30 +50,8 @@ class ClaudeSender(Sender):
     async def asend(self, target: str, message: str, raw=_IGNORE):
         logger.debug(f"[{self.__class__.__name__}] asend: {target=} {message=} {raw=}")
 
-        message = message.splitlines()
-
-        for i, line in enumerate(message):
-            h, e = await super().asend(target, line.strip(), raw=False)
-            if not h:
-                logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-                return False, e
-            if i < len(message) - 1:
-                h, e = await super().asend(target, "+{ENTER}", raw=True)
-                if not h:
-                    logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-                    return False, e
-
-        h, e = await super().asend(target, "+{ENTER}+{ENTER}", raw=True)
-        if not h:
-            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-            return False, e
-
-        h, e = await super().asend(target, self.sink_prompt, raw=False)
-        if not h:
-            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
-            return False, e
-
-        h, e = await super().asend(target, "{ENTER}", raw=True)
+        args = self.__create_send_argss(message)
+        h, e = await super().asends(target, args)
         if not h:
             logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
             return False, e

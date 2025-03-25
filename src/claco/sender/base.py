@@ -1,5 +1,6 @@
 import os
 import subprocess
+from subprocess import PIPE
 import asyncio
 from locale import getdefaultlocale
 import re
@@ -55,12 +56,7 @@ class Sender:
         args = [self.exe_path, target, message]
         if raw:
             args.insert(1, "--raw")
-        x = subprocess.run(
-            args,
-            shell=False,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
+        x = subprocess.run(args, shell=False, stdout=PIPE, stderr=PIPE)
 
         e = x.returncode
 
@@ -88,12 +84,70 @@ class Sender:
         args = [self.exe_path, target, message]
         if raw:
             args.insert(1, "--raw")
-        x = await asyncio.subprocess.create_subprocess_shell(
-            args,
-            shell=False,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
+        x = await asyncio.subprocess.create_subprocess_shell(args, shell=False, stdout=PIPE, stderr=PIPE)
+
+        out, err = await x.communicate()
+
+        e = x.returncode
+
+        if e == 0:
+            return True, None
+
+        out, err = _decode(x.stdout), _decode(x.stderr)
+
+        logger.debug(f"[{self.__class__.__name__}] stdout: {out}")
+        logger.debug(f"[{self.__class__.__name__}] stderr: {out}")
+
+        err_msg = _get_error_message(out, target)
+
+        return False, err_msg
+
+    def sends(
+        self,
+        target: str,
+        messages: list[tuple[str, bool]],
+    ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
+        # execute command `{exe_path} {message}`
+        logger.debug(f"[{self.__class__.__name__}] send: {target=} {messages=}")
+
+        args = [self.exe_path, target]
+        for message in messages:
+            if message[1]:
+                args.append("--raw")
+            args.append(message[0])
+
+        x = subprocess.run(args, shell=False, stdout=PIPE, stderr=PIPE)
+
+        e = x.returncode
+
+        if e == 0:
+            out, err = _decode(x.stdout), _decode(x.stderr)
+            return True, None
+
+        out, err = _decode(x.stdout), _decode(x.stderr)
+
+        logger.debug(f"[{self.__class__.__name__}] stdout: {out}")
+        logger.debug(f"[{self.__class__.__name__}] stderr: {out}")
+
+        err_msg = _get_error_message(out, target)
+
+        return False, err_msg
+
+    async def asends(
+        self,
+        target: str,
+        messages: list[tuple[str, bool]],
+    ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
+        # execute command `{exe_path} {message}`
+        logger.debug(f"[{self.__class__.__name__}] send: {target=} {messages=}")
+
+        args = [self.exe_path, target]
+        for message in messages:
+            if message[1]:
+                args.append("--raw")
+            args.append(message[0])
+
+        x = await asyncio.subprocess.create_subprocess_shell(args, shell=False, stdout=PIPE, stderr=PIPE)
 
         out, err = await x.communicate()
 
