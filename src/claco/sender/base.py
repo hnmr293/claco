@@ -30,6 +30,8 @@ def _get_error_message(out: str, target: str) -> str:
             for handle in handles:
                 err_msg += f"\n  handle = {handle}"
 
+    return err_msg
+
 
 class Sender:
     def __init__(self, exe_path: str):
