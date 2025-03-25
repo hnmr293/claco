@@ -35,11 +35,12 @@ def sink(message: str) -> None:
     try:
         msg = message.encode("utf-8")
         print(f"[Sink] sending: {message}", file=sys.stderr)
-        sock.sendto(msg, (CLACO_UDP_ADDR, CLACO_UDP_PORT))
+        sock.sendto(msg, (CLACO_UDP_ADDR, int(CLACO_UDP_PORT)))
         print(f"[Sink] completed", file=sys.stderr)
     except Exception as e:
         error_message = f"failed to send message: {e}"
         print(f"[Sink] {error_message}", file=sys.stderr)
+        traceback.print_exception(e, file=sys.stderr)
 
         # 例外をログファイルに記録
         log_directory = "logs"
