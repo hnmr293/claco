@@ -72,6 +72,9 @@ class _Receiver:
         except Exception as e:
             raise RecvError() from e
 
+    def clear(self):
+        self.messages.clear()
+
 
 class _AsyncReceiver:
     # ターゲットから返事をもらう側の処理を担当する
@@ -99,6 +102,9 @@ class _AsyncReceiver:
                 yield message
         except Exception as e:
             raise RecvError() from e
+
+    def clear(self):
+        self.messages.clear()
 
 
 class Communicator:

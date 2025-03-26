@@ -41,6 +41,14 @@ class MessageQueue:
             msg = self.receive()
             yield msg
 
+    def clear(self):
+        logger.debug(f"[{self.__class__.__name__}] clear")
+
+        try:
+            self._q.queue.clear()
+        except:
+            logger.exception("Queue.queue.clear")
+
 
 class AsyncMessageQueue:
     def __init__(self, maxsize=1):
@@ -74,3 +82,11 @@ class AsyncMessageQueue:
         while True:
             msg = await self.receive()
             yield msg
+
+    def clear(self):
+        logger.debug(f"[{self.__class__.__name__}] clear")
+
+        try:
+            self._q.queue.clear()
+        except:
+            logger.exception("Queue.queue.clear")
