@@ -79,3 +79,23 @@ class ClaudeSender(Sender):
             return False, e
 
         return True, None
+
+    def send_cancel(self, target: str):
+        logger.debug(f"[{self.__class__.__name__}] send_cancel {target=}")
+
+        h, e = super().send(target, "_^{BS}{ESC}", raw=True)
+        if not h:
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
+            return False, e
+
+        return True, None
+
+    async def asend_cancel(self, target: str):
+        logger.debug(f"[{self.__class__.__name__}] asend_cancel {target=}")
+
+        h, e = await super().asend(target, "_^{BS}{ESC}", raw=True)
+        if not h:
+            logger.error(f"[{self.__class__.__name__}] failed to send message: {e}")
+            return False, e
+
+        return True, None
