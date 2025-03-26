@@ -55,7 +55,7 @@ class Sender:
 
         args = [self.exe_path, target, message]
         if raw:
-            args.insert(1, "--raw")
+            args.insert(2, "--raw")
         x = subprocess.run(args, shell=False, stdout=PIPE, stderr=PIPE)
 
         e = x.returncode
@@ -83,7 +83,7 @@ class Sender:
 
         args = [self.exe_path, target, message]
         if raw:
-            args.insert(1, "--raw")
+            args.insert(2, "--raw")
         x = await asyncio.subprocess.create_subprocess_shell(args, shell=False, stdout=PIPE, stderr=PIPE)
 
         out, err = await x.communicate()
