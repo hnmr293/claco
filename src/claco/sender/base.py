@@ -49,13 +49,18 @@ class Sender:
         target: str,
         message: str,
         raw: bool = False,
+        window_title: str | None = None,
     ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
         # execute command `{exe_path} {message}`
-        logger.debug(f"[{self.__class__.__name__}] send: {target=} {message=} {raw=}")
+        logger.debug(f"[{self.__class__.__name__}] send: {target=} {window_title=} {message=} {raw=}")
 
-        args = [self.exe_path, target, message]
+        args = [self.exe_path, target]
+        if window_title:
+            args.append("--window")
+            args.append(window_title)
         if raw:
-            args.insert(2, "--raw")
+            args.append("--raw")
+        args.append(message)
         x = subprocess.run(args, shell=False, stdout=PIPE, stderr=PIPE)
 
         e = x.returncode
@@ -77,13 +82,18 @@ class Sender:
         target: str,
         message: str,
         raw: bool = False,
+        window_title: str | None = None,
     ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
         # execute command `{exe_path} {message}`
         logger.debug(f"[{self.__class__.__name__}] asend: {target=} {message=} {raw=}")
 
-        args = [self.exe_path, target, message]
+        args = [self.exe_path, target]
+        if window_title:
+            args.append("--window")
+            args.append(window_title)
         if raw:
-            args.insert(2, "--raw")
+            args.append("--raw")
+        args.append(message)
         x = await asyncio.subprocess.create_subprocess_shell(args, shell=False, stdout=PIPE, stderr=PIPE)
 
         out, err = await x.communicate()
@@ -106,11 +116,15 @@ class Sender:
         self,
         target: str,
         messages: list[tuple[str, bool]],
+        window_title: str | None = None,
     ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
         # execute command `{exe_path} {message}`
         logger.debug(f"[{self.__class__.__name__}] send: {target=} {messages=}")
 
         args = [self.exe_path, target]
+        if window_title:
+            args.append("--window")
+            args.append(window_title)
         for message in messages:
             if message[1]:
                 args.append("--raw")
@@ -137,11 +151,15 @@ class Sender:
         self,
         target: str,
         messages: list[tuple[str, bool]],
+        window_title: str | None = None,
     ) -> tuple[Literal[True], None] | tuple[Literal[False], str]:
         # execute command `{exe_path} {message}`
         logger.debug(f"[{self.__class__.__name__}] send: {target=} {messages=}")
 
         args = [self.exe_path, target]
+        if window_title:
+            args.append("--window")
+            args.append(window_title)
         for message in messages:
             if message[1]:
                 args.append("--raw")
